@@ -3,6 +3,8 @@ pydeezer-asy
 asyncio 
 pytube 
 unidecode 
+gunicorn
+fcntl
 youtube-search-python 
 cryptography 
 aiohttp 
