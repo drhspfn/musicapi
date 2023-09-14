@@ -2,6 +2,7 @@ music-helper
 pydeezer-asy 
 asyncio 
 pytube 
+flask[async]
 unidecode 
 gunicorn
 youtube-search-python 
