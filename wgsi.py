@@ -272,7 +272,7 @@ async def stream_sc():
         response_data['message'] = "The 'secret' parameter was not passed"
 
     return jsonify(response_data), response_status
-@app.route("/yt/search", methods = ['GET'])
+@app.route("/sc/search", methods = ['GET'])
 async def search_sc():
     response_data = {'status': False, 'message': "No mandatory arguments passed", 'data': []}
     response_status = 404
