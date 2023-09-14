@@ -1,0 +1,11 @@
+music-helper 
+pydeezer-asy 
+asyncio 
+pytube 
+unidecode 
+youtube-search-python 
+cryptography 
+aiohttp 
+asyncio 
+shazamio 
+lyricsgenius
