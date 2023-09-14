@@ -1,0 +1,19 @@
+{
+    "genius_api": "ls89HddC_G4s66PiALTjibFlZxtBBh_lkAe_0A5whBiJJZ-ksGWgAOY_jVMrbkLi",
+    "deezer_api": "66d4153ec58e0e360bb37084b46c53faadf87af23cc6bea9f4d2ba7ae11d69339cc8634f73f276547fa1f0ae2d79231e8cf25af8c6dec9eb65efb4ea15e8abb54494cdf35e2917bcc023e2bef33b8e8f1e63a929422bfc4de3aa6236b57a2232",
+    "api_key": "dev",
+    "sanitize_parts": ["lyric","lyrics", "(music video)","(official music video)", "feat.", "f."],
+    "sc_data": {
+        "client_id": "190062830082007a47496581676550563",
+        "client_secret": "2-294087-475145775-Fyz1r0ljyakCZx"
+    },
+    "ytm_oauth": "oauth.json",
+    "_ytm_oauth": {
+        "access_token": "ya29.a0AfB_byAAoHHD6FmbOd4Pa_Iw4GtPXRsBgwzYmAhN2lWgGSb6g0k5ioA6OTzDq9ONv8ptxBCsZeUJsMXqdGhJqg1G2QKjONtLNEYdExSQ5M1iaW99egNa_7s83_80DgpU5XC_qXhz1oyq83_PTQbf4wOxlgiLAuICyF8ZxNSufRv01t8YaCgYKAdcSARESFQGOcNnC8QK9hIEgP7VwdwjwOmfKcQ0183",
+        "expires_in": 70424,
+        "refresh_token": "1//09nq1HjYimaCbCgYIARAAGAkSNwF-L9IrK6YEU3uuOgHDxDahHLVeMAVvlc-unBhfUCkcaCPallT2HeWZIKS0lM8mR5_8OdaOAOE",
+        "scope": "https://www.googleapis.com/auth/youtube",
+        "token_type": "Bearer",
+        "expires_at": 1694785429
+       }
+}
