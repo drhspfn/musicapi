@@ -231,12 +231,12 @@ async def stream_sc():
             
             total_filesize = 0
             async with httpx.AsyncClient() as client:
-                response = await client.head(track_url)
+                _response = await client.head(track_url)
 
-                if response.status_code != 200:
-                    return web.Response(status=response.status_code)
+                if _response.status_code != 200:
+                    return _response.status_code
 
-                total_filesize = int(response.headers.get('Content-Length', 0))
+                total_filesize = int(_response.headers.get('Content-Length', 0))
 
 
             start = 0
@@ -421,7 +421,7 @@ async def stream_yt():
         response_status = 401
         response_data['message'] = "The 'secret' parameter was not passed"
 
-    return web.json_response(response_data, status=response_status)
+    return jsonify(response_data), response_status
 @app.route("/yt/clip", methods = ['GET'])
 async def clip_yt():
     response_data = {'status': False, 'message': "No mandatory arguments passed", 'data': []}
@@ -467,10 +467,12 @@ async def shazam_audio():
 
             audio_bytes_io = io.BytesIO(audio_data)
             sondData = await shazamAPI.recognize_song(audio_bytes_io.read())
-            return web.json_response(sondData)
+            return jsonify(sondData), 200
 
     except Exception as e:
-        return web.Response(status=400, text=f"Error: {str(e)}")
+        return jsonify({'status':False, "message": str(e)}), 400
+    
+    return 400
 ############################################################################3c
 ############################################################################3c
 ############################################################################3c
@@ -519,7 +521,7 @@ async def search_genius():
         response_status = 401
         response_data['message'] = "The 'secret' parameter was not passed"
 
-    return web.json_response(response_data, status=response_status)
+    return jsonify(response_data), response_status
 
 
 
