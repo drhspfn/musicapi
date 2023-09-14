@@ -316,7 +316,7 @@ async def generate_yt_answer(qu:str, limit:int, ytm:bool):
             search_result = await search_result.next()
             if search_result.get('result', []):
                 answer = []
-                for item in search_result['result'][:limit+2]:
+                for item in search_result['result'][:limit]:
                     time_parts = item.get('duration', "1:10").split(':')
 
                     if len(time_parts) == 2: 
