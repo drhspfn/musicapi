@@ -1,7 +1,6 @@
 import asyncio, io, os
 import deezer_asy.util as DeezerUtil
 import deezer_asy.constants as DeezerConstant
-from aiohttp import web
 from sys import exit
 from pytube import YouTube
 from shazamio import Shazam
@@ -104,12 +103,20 @@ async def convert_to_json(obj:list):
 #$$$$$$$$$$$$$$$$$$$$$$$$$
 #$$$$$$$$$$$$$$$$$$$$$$$$$
 
-DEEZER_API = os.environ.get("DEEZER_ARL", None)
+GENIUS_API = "ls89HddC_G4s66PiALTjibFlZxtBBh_lkAe_0A5whBiJJZ-ksGWgAOY_jVMrbkLi"
+DEEZER_API = "66d4153ec58e0e360bb37084b46c53faadf87af23cc6bea9f4d2ba7ae11d69339cc8634f73f276547fa1f0ae2d79231e8cf25af8c6dec9eb65efb4ea15e8abb54494cdf35e2917bcc023e2bef33b8e8f1e63a929422bfc4de3aa6236b57a2232"
+APP_API_KEY = "dev"
+SC_CLIENT = "190062830082007a47496581676550563"
+SC_SECRET = "2-294087-475145775-Fyz1r0ljyakCZx"
+YTM_OAUTH = "oauth.json"
+
+
+"""DEEZER_API = os.environ.get("DEEZER_ARL", None)
 YTM_OAUTH = os.environ.get("YTM_OAUTH", None)
 SC_CLIENT = os.environ.get("SC_CLIENT", None)
 SC_SECRET = os.environ.get("SC_SECRET", None)
 GENIUS_API = os.environ.get("GENIUS_API", None)
-APP_API_KEY = os.environ.get("APP_API_KEY", None)
+APP_API_KEY = os.environ.get("APP_API_KEY", None)"""
 
 mHelper = MHelper(
     deezer_arl=DEEZER_API, 
@@ -415,7 +422,7 @@ async def stream_yt():
                     'Content-Range': f'bytes {start}-{end}/{audio_length}'
                 }
                 return Response(mp3_data, content_type='audio/mp3', headers=headers, status=status_code)
-            except YTExceptions as yt_eror:
+            except Exception as yt_eror:
                 response_data['message'] = str(yt_eror)
     else:
         response_status = 401
