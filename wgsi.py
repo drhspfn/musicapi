@@ -307,7 +307,7 @@ async def generate_yt_answer(qu:str, limit:int, ytm:bool):
         if ytm:
             data = await mHelper.ytm.search(qu, 'songs', limit=limit)
             if data:
-                return data
+                return data[:limit]
             else:
                 return await generate_yt_answer(qu, limit, not ytm)
 
@@ -316,7 +316,7 @@ async def generate_yt_answer(qu:str, limit:int, ytm:bool):
             search_result = await search_result.next()
             if search_result.get('result', []):
                 answer = []
-                for item in search_result['result']:
+                for item in search_result['result'][:limit+2]:
                     time_parts = item.get('duration', "1:10").split(':')
 
                     if len(time_parts) == 2: 
