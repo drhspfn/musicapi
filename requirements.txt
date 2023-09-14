@@ -1,4 +1,4 @@
-music-helper 
+music-helper==1.0.5
 pydeezer-asy 
 asyncio 
 pytube 
