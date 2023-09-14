@@ -1,4 +1,4 @@
-import asyncio, io
+import asyncio, io, os
 import deezer_asy.util as DeezerUtil
 import deezer_asy.constants as DeezerConstant
 from aiohttp import web
@@ -18,20 +18,6 @@ from cryptography.hazmat.backends import default_backend
 from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
 
 app = Flask(__name__)
-
-WEB_H_CONFIG = {}
-def parse_config(file_path:str):
-    global WEB_H_CONFIG
-    try:
-        with open(file_path, 'r', encoding='utf-8') as file:
-            WEB_H_CONFIG = json.load(file)
-            return 
-
-    except FileNotFoundError:
-        with open(file_path, 'w', encoding='utf-8') as file:
-            json.dump({}, file)
-
-        return exit(1)
 
 
 """
@@ -53,10 +39,11 @@ lyricsgenius
 music-helper pydeezer-asy asyncio pytube unidecode youtube-search-python cryptography aiohttp asyncio shazamio lyricsgenius
 """
 
+SANITIZE_PARTS = ["lyric","lyrics", "(music video)","(official music video)", "feat.", "f."]
+
 APP_LOOP = asyncio.get_event_loop()
 
 
-parse_config('./config.json')
 class CustomEncoder(json.JSONEncoder):
     def default(self, obj):
         if isinstance(obj, datetime.datetime):
@@ -93,7 +80,7 @@ async def sanitize_string(string_line:str, other_string_line:str=""):
 
         string_line = string_line.replace("-", "")
 
-        for part in WEB_H_CONFIG['sanitize_parts']:
+        for part in SANITIZE_PARTS:
             if string_line.lower().find(part) != -1:
                 string_line = string_line.replace(part, "")
 
@@ -118,16 +105,22 @@ async def convert_to_json(obj:list):
 #$$$$$$$$$$$$$$$$$$$$$$$$$
 #$$$$$$$$$$$$$$$$$$$$$$$$$
 
+DEEZER_API = os.environ.get("DEEZER_ARL", None)
+YTM_OAUTH = os.environ.get("YTM_OAUTH", None)
+SC_CLIENT = os.environ.get("SC_CLIENT", None)
+SC_SECRET = os.environ.get("SC_SECRET", None)
+GENIUS_API = os.environ.get("GENIUS_API", None)
+APP_API_KEY = os.environ.get("APP_API_KEY", None)
 
 mHelper = MHelper(
-    deezer_arl=WEB_H_CONFIG['deezer_api'], 
-    ytm_oauth=WEB_H_CONFIG['ytm_oauth'] ,
+    deezer_arl=DEEZER_API, 
+    ytm_oauth=YTM_OAUTH,
     sc_data=(
-        WEB_H_CONFIG['sc_data']['client_id'], 
-        WEB_H_CONFIG['sc_data']['client_secret']), 
+        SC_CLIENT, 
+        SC_SECRET), 
     loop=APP_LOOP)
 shazamAPI = Shazam()
-geniusAPI = lyricsgenius.Genius(WEB_H_CONFIG['genius_api']) 
+geniusAPI = lyricsgenius.Genius(GENIUS_API) 
 #################################################################################
 #################################################################################
 #################################################################################
@@ -142,7 +135,7 @@ async def stream_deezer():
     api_key = request.args.get('secret', None)
     audio_id = request.args.get('id', None)
     if api_key is not None:
-        if audio_id and api_key == WEB_H_CONFIG['api_key']:
+        if audio_id and api_key == APP_API_KEY:
             _track = await mHelper.deezer.get_track(audio_id, False)
             if _track:
                 url, _ = await mHelper.deezer.get_track_download_url(_track['info'])
@@ -209,7 +202,7 @@ async def search_deezer():
     search_qu = request.args.get('qu', None)
     search_limit = request.args.get('limit', 5)
     if api_key is not None:
-        if search_qu and api_key == WEB_H_CONFIG['api_key']:
+        if search_qu and api_key == APP_API_KEY:
             try:
                 response_data['data'] = await mHelper.deezer.search_tracks(search_qu, search_limit)
                 response_data['status'] = True
@@ -235,7 +228,7 @@ async def stream_sc():
     api_key = request.args.get('secret', None)
     audio_id = request.args.get('id', None)
     if api_key is not None:
-        if audio_id and api_key == WEB_H_CONFIG['api_key']:
+        if audio_id and api_key == APP_API_KEY:
             track_url = await mHelper.soundcloud.get_track_url(audio_id)
             
             total_filesize = 0
@@ -289,7 +282,7 @@ async def search_sc():
     search_qu = request.args.get('qu', None)
     search_limit = request.args.get('limit', 5)
     if api_key is not None:
-        if search_qu and api_key == WEB_H_CONFIG['api_key']:
+        if search_qu and api_key == APP_API_KEY:
             try:
                 data = await mHelper.soundcloud.search(search_qu, filter='track', limit=int(search_limit))
                 response_data['data'] = await convert_to_json(list(data))
@@ -371,7 +364,7 @@ async def search_yt():
         search_ytm = False
  
     if api_key is not None:
-        if search_qu and api_key == WEB_H_CONFIG['api_key']:
+        if search_qu and api_key == APP_API_KEY:
             response_data['status'] = 200
             response_data['message'] = ""
             response_data['status'] = True
@@ -390,7 +383,7 @@ async def stream_yt():
     video_id = request.args.get('id', None)
 
     if api_key is not None:
-        if video_id and api_key == WEB_H_CONFIG['api_key']:
+        if video_id and api_key == APP_API_KEY:
             try:
                 a = YouTube(f'https://youtu.be/{video_id}')
                 audio_stream = a.streams.filter(only_audio=True, file_extension='mp4').first()
@@ -439,7 +432,7 @@ async def clip_yt():
     qu = request.args.get('qu', None)
 
     if api_key is not None:
-        if qu and api_key == WEB_H_CONFIG['api_key']:
+        if qu and api_key == APP_API_KEY:
             try:
                 search_result = VideosSearch(qu, limit = 1)
                 search_result = await search_result.next()
@@ -516,7 +509,7 @@ async def search_genius():
     search_qu = request.args.get('qu', None)
 
     if api_key is not None:
-        if search_qu and api_key == WEB_H_CONFIG['api_key']:
+        if search_qu and api_key == APP_API_KEY:
             task = await APP_LOOP.run_in_executor(None, lambda: exec_genius(search_qu))
             result = await task
             if result:
@@ -535,7 +528,3 @@ async def search_genius():
 @app.route("/")
 async def home_page():
     return jsonify({"hello": "world!"})
-
-if __name__ == '__main__':
-    app.run(host='127.0.0.1', port=8080)
-    #web.run_app(app, host="127.0.0.1", loop=APP_LOOP)
