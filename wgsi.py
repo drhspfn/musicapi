@@ -41,7 +41,6 @@ music-helper pydeezer-asy asyncio pytube unidecode youtube-search-python cryptog
 
 SANITIZE_PARTS = ["lyric","lyrics", "(music video)","(official music video)", "feat.", "f."]
 
-APP_LOOP = asyncio.get_event_loop()
 
 
 class CustomEncoder(json.JSONEncoder):
@@ -117,8 +116,7 @@ mHelper = MHelper(
     ytm_oauth=YTM_OAUTH,
     sc_data=(
         SC_CLIENT, 
-        SC_SECRET), 
-    loop=APP_LOOP)
+        SC_SECRET))
 shazamAPI = Shazam()
 geniusAPI = lyricsgenius.Genius(GENIUS_API) 
 #################################################################################
@@ -510,7 +508,7 @@ async def search_genius():
 
     if api_key is not None:
         if search_qu and api_key == APP_API_KEY:
-            task = await APP_LOOP.run_in_executor(None, lambda: exec_genius(search_qu))
+            task = await asyncio.get_event_loop().run_in_executor(None, lambda: exec_genius(search_qu))
             result = await task
             if result:
                 response_data['data'] = result
